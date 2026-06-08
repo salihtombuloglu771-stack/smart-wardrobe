@@ -1,35 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v2 as cloudinary } from 'cloudinary';
-import { Readable } from 'stream';
+import axios from 'axios';
+import { randomUUID } from 'crypto';
+
+const GITHUB_OWNER = 'salihtombuloglu771-stack';
+const GITHUB_REPO = 'smart-wardrobe-images';
+const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main`;
 
 @Injectable()
 export class StorageService {
+  private readonly token: string;
+
   constructor(private config: ConfigService) {
-    cloudinary.config({
-      cloud_name: this.config.get('CLOUDINARY_CLOUD_NAME'),
-      api_key: this.config.get('CLOUDINARY_API_KEY'),
-      api_secret: this.config.get('CLOUDINARY_API_SECRET'),
-    });
+    this.token = this.config.get('GITHUB_TOKEN') as string;
   }
 
   async uploadClothingImage(buffer: Buffer, userId: string): Promise<{ url: string; publicId: string }> {
-    return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: `smart-wardrobe/${userId}/clothing`,
-          transformation: [{ width: 800, height: 1000, crop: 'fill', gravity: 'auto' }],
-        },
-        (error, result) => {
-          if (error) return reject(error);
-          resolve({ url: result!.secure_url, publicId: result!.public_id });
-        },
-      );
-      Readable.from(buffer).pipe(uploadStream);
-    });
+    const filename = `${userId}/${randomUUID()}.jpg`;
+    const content = buffer.toString('base64');
+
+    await axios.put(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filename}`,
+      { message: `upload ${filename}`, content },
+      { headers: { Authorization: `token ${this.token}`, 'Content-Type': 'application/json' } },
+    );
+
+    return { url: `${RAW_BASE}/${filename}`, publicId: filename };
   }
 
   async deleteImage(publicId: string): Promise<void> {
-    await cloudinary.uploader.destroy(publicId);
+    try {
+      const { data } = await axios.get(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${publicId}`,
+        { headers: { Authorization: `token ${this.token}` } },
+      );
+      await axios.delete(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${publicId}`,
+        {
+          data: { message: `delete ${publicId}`, sha: data.sha },
+          headers: { Authorization: `token ${this.token}`, 'Content-Type': 'application/json' },
+        },
+      );
+    } catch {
+      // silently ignore delete failures
+    }
   }
 }
