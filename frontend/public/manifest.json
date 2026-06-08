@@ -2,23 +2,48 @@
   "name": "Smart Wardrobe AI",
   "short_name": "Gardırop",
   "description": "AI destekli akıllı gardırop ve kombin asistanı",
-  "start_url": "/",
+  "start_url": "/wardrobe",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#e11d48",
   "orientation": "portrait",
+  "categories": ["lifestyle", "fashion"],
   "icons": [
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kombin Oluştur",
+      "url": "/outfit",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Gardırop",
+      "url": "/wardrobe",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [

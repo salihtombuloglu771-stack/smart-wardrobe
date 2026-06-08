@@ -4,8 +4,7 @@ const nextConfig: NextConfig = {
   turbopack: {},
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
-      { protocol: 'https', hostname: 'openweathermap.org' },
+      { protocol: 'https', hostname: 'raw.githubusercontent.com' },
     ],
   },
 };

@@ -120,11 +120,45 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
   html {
     @apply font-sans;
+    overscroll-behavior: none;
   }
+
+  /* Prevent iOS input zoom — inputs must be >= 16px */
+  input, select, textarea {
+    font-size: max(16px, 1em);
+  }
+
+  /* Remove scrollbar everywhere */
+  ::-webkit-scrollbar { display: none; }
+  * { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Native touch behavior on interactive elements */
+  button, a, [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  /* Smooth momentum scrolling on scroll containers */
+  .overflow-auto, .overflow-y-auto, .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: page-enter 0.18s ease-out both;
 }

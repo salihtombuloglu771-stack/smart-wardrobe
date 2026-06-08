@@ -7,70 +7,106 @@ import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shirt } from 'lucide-react';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '', city: '' });
   const { register, loading } = useAuthStore();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await register(form);
       router.replace('/wardrobe');
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Kayıt başarısız');
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.error(msg || 'Kayıt başarısız');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-100 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-2">
-          <div className="flex justify-center">
-            <div className="p-3 bg-rose-100 rounded-full">
-              <Shirt className="h-8 w-8 text-rose-600" />
+    <div
+      className="min-h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-br from-rose-50 via-white to-pink-50 px-5"
+      style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-20 h-20 rounded-3xl overflow-hidden shadow-lg mb-4">
+            <Image src="/icons/icon-192.png" alt="Logo" width={80} height={80} className="w-full h-full object-cover" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">Hesap Oluştur</h1>
+          <p className="text-sm text-gray-500 mt-1">Smart Wardrobe AI'ya katıl</p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">Ad Soyad</Label>
+              <Input
+                placeholder="Adın"
+                value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                autoComplete="name"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">Şehir</Label>
+              <Input
+                placeholder="İstanbul"
+                value={form.city}
+                onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
+                autoComplete="address-level2"
+              />
             </div>
           </div>
-          <CardTitle className="text-2xl">Hesap Oluştur</CardTitle>
-          <CardDescription>Smart Wardrobe AI'ya katıl</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Ad Soyad</Label>
-              <Input id="name" placeholder="Adın" value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">E-posta</Label>
-              <Input id="email" type="email" placeholder="ornek@email.com" value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Şifre</Label>
-              <Input id="password" type="password" placeholder="En az 6 karakter" value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required minLength={6} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="city">Şehir <span className="text-muted-foreground">(opsiyonel)</span></Label>
-              <Input id="city" placeholder="İstanbul" value={form.city}
-                onChange={e => setForm(f => ({ ...f, city: e.target.value }))} />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Kaydediliyor...' : 'Kayıt Ol'}
-            </Button>
-          </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Hesabın var mı?{' '}
-            <Link href="/login" className="text-rose-600 hover:underline font-medium">
-              Giriş Yap
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium">E-posta</Label>
+            <Input
+              type="email"
+              placeholder="ornek@email.com"
+              value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+              autoComplete="email"
+              required
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium">Şifre</Label>
+            <Input
+              type="password"
+              placeholder="En az 6 karakter"
+              value={form.password}
+              onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+              autoComplete="new-password"
+              required
+              minLength={6}
+            />
+          </div>
+          <Button
+            type="submit"
+            className="w-full h-12 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-base mt-2"
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Kaydediliyor...
+              </span>
+            ) : 'Kayıt Ol'}
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Hesabın var mı?{' '}
+          <Link href="/login" className="text-rose-600 font-semibold">
+            Giriş Yap
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

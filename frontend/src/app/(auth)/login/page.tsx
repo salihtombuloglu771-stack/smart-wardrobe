@@ -7,8 +7,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shirt } from 'lucide-react';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -21,51 +20,72 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.replace('/wardrobe');
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Giriş başarısız');
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.error(msg || 'Giriş başarısız');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-100 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-2">
-          <div className="flex justify-center">
-            <div className="p-3 bg-rose-100 rounded-full">
-              <Shirt className="h-8 w-8 text-rose-600" />
-            </div>
+    <div
+      className="min-h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-br from-rose-50 via-white to-pink-50 px-5"
+      style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-20 h-20 rounded-3xl overflow-hidden shadow-lg mb-4">
+            <Image src="/icons/icon-192.png" alt="Logo" width={80} height={80} className="w-full h-full object-cover" />
           </div>
-          <CardTitle className="text-2xl">Smart Wardrobe AI</CardTitle>
-          <CardDescription>Akıllı gardırobuna hoş geldin</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">E-posta</Label>
-              <Input
-                id="email" type="email" placeholder="ornek@email.com"
-                value={email} onChange={e => setEmail(e.target.value)} required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Şifre</Label>
-              <Input
-                id="password" type="password" placeholder="••••••"
-                value={password} onChange={e => setPassword(e.target.value)} required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
-            </Button>
-          </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Hesabın yok mu?{' '}
-            <Link href="/register" className="text-rose-600 hover:underline font-medium">
-              Kayıt Ol
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+          <h1 className="text-2xl font-bold text-gray-900">Smart Wardrobe</h1>
+          <p className="text-sm text-gray-500 mt-1">AI destekli gardırop asistanın</p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium">E-posta</Label>
+            <Input
+              type="email"
+              placeholder="ornek@email.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium">Şifre</Label>
+            <Input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+          <Button
+            type="submit"
+            className="w-full h-12 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-base mt-2"
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Giriş yapılıyor...
+              </span>
+            ) : 'Giriş Yap'}
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Hesabın yok mu?{' '}
+          <Link href="/register" className="text-rose-600 font-semibold">
+            Kayıt Ol
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
