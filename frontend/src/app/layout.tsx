@@ -9,6 +9,14 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 export const metadata: Metadata = {
   title: 'Smart Wardrobe AI — Akıllı Gardırop',
   description: 'AI destekli kıyafet yönetimi ve kombin asistanı',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Smart Wardrobe',
+  },
+  formatDetection: { telephone: false },
+  themeColor: '#e11d48',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
