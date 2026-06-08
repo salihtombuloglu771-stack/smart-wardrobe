@@ -5,7 +5,8 @@ import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Shirt, Sparkles, CalendarDays, BarChart3, User, LogOut, Home } from 'lucide-react';
+import { Shirt, Sparkles, CalendarDays, BarChart3, LogOut } from 'lucide-react';
+
 
 const navItems = [
   { href: '/wardrobe', label: 'Gardırop', icon: Shirt },
@@ -19,7 +20,7 @@ export function Sidebar() {
   const { user, logout } = useAuthStore();
 
   return (
-    <aside className="w-64 min-h-screen bg-white border-r flex flex-col">
+    <aside className="hidden md:flex w-64 min-h-screen bg-white border-r flex-col">
       <div className="p-6 border-b">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-rose-100 rounded-lg">

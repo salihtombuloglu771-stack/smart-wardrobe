@@ -45,30 +45,42 @@ export default function WardrobePage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-bold">Gardırobum</h1>
-          <p className="text-muted-foreground text-sm">{clothes.length} parça</p>
+          <h1 className="text-xl md:text-2xl font-bold">Gardırobum</h1>
+          <p className="text-muted-foreground text-xs md:text-sm">{clothes.length} parça</p>
         </div>
-        <Button onClick={() => setUploadOpen(true)} className="bg-rose-600 hover:bg-rose-700">
-          <Plus className="h-4 w-4 mr-2" /> Kıyafet Ekle
+        <Button
+          onClick={() => setUploadOpen(true)}
+          className="bg-rose-600 hover:bg-rose-700 h-10 rounded-xl"
+          size="sm"
+        >
+          <Plus className="h-4 w-4 mr-1" /> Ekle
         </Button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Kıyafet ara..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
+      {/* Search */}
+      <div className="relative mb-3">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Kıyafet veya renk ara..."
+          className="pl-9 h-11 rounded-xl"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
       </div>
 
-      <div className="flex gap-2 flex-wrap mb-6">
+      {/* Category filter — scrollable row */}
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none -mx-4 px-4">
         {CATEGORIES.map(cat => (
           <Badge
             key={cat}
             variant={activeCategory === cat ? 'default' : 'outline'}
-            className={`cursor-pointer ${activeCategory === cat ? 'bg-rose-600' : 'hover:bg-rose-50'}`}
+            className={`cursor-pointer shrink-0 rounded-full py-1 px-3 text-xs ${
+              activeCategory === cat ? 'bg-rose-600 text-white' : 'hover:bg-rose-50'
+            }`}
             onClick={() => setActiveCategory(cat)}
           >
             {cat === 'Tümü' ? 'Tümü' : CATEGORY_LABELS[cat as ClothingCategory]}
@@ -77,27 +89,38 @@ export default function WardrobePage() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-[3/4] rounded-xl" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="aspect-[3/4] rounded-2xl" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">
-          <Shirt className="h-16 w-16 mx-auto text-muted-foreground/30 mb-4" />
-          <p className="text-lg font-medium text-muted-foreground">Gardırop boş</p>
-          <p className="text-sm text-muted-foreground mt-1">İlk kıyafetini ekle</p>
-          <Button onClick={() => setUploadOpen(true)} className="mt-4 bg-rose-600 hover:bg-rose-700">
+          <div className="p-5 bg-rose-50 rounded-full w-fit mx-auto mb-4">
+            <Shirt className="h-12 w-12 text-rose-300" />
+          </div>
+          <p className="text-base font-semibold text-gray-700">Gardırop boş</p>
+          <p className="text-sm text-muted-foreground mt-1 mb-5">İlk kıyafetini ekleyerek başla</p>
+          <Button onClick={() => setUploadOpen(true)} className="bg-rose-600 hover:bg-rose-700 rounded-xl h-12 px-6">
             <Plus className="h-4 w-4 mr-2" /> İlk Kıyafeti Ekle
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map(item => (
             <ClothingCard key={item.id} item={item} onDelete={handleDelete} />
           ))}
         </div>
       )}
+
+      {/* FAB for mobile */}
+      <button
+        onClick={() => setUploadOpen(true)}
+        className="fixed bottom-20 right-4 md:hidden z-40 bg-rose-600 text-white p-4 rounded-full shadow-lg active:scale-95 transition-transform"
+        aria-label="Kıyafet ekle"
+      >
+        <Plus className="h-6 w-6" />
+      </button>
 
       <UploadModal
         open={uploadOpen}
