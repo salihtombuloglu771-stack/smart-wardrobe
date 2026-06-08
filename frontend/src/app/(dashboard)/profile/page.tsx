@@ -159,7 +159,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs">Renk Mevsimi</Label>
-              <Select value={form.colorSeason} onValueChange={(v: string) => setForm(f => ({ ...f, colorSeason: v }))}>
+              <Select value={form.colorSeason} onValueChange={(v: string | null) => setForm(f => ({ ...f, colorSeason: v ?? '' }))}>
                 <SelectTrigger className="h-11 rounded-xl">
                   <SelectValue placeholder="Seç..." />
                 </SelectTrigger>
@@ -170,7 +170,7 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs">Yüz Şekli</Label>
-              <Select value={form.faceShape} onValueChange={(v: string) => setForm(f => ({ ...f, faceShape: v }))}>
+              <Select value={form.faceShape} onValueChange={(v: string | null) => setForm(f => ({ ...f, faceShape: v ?? '' }))}>
                 <SelectTrigger className="h-11 rounded-xl">
                   <SelectValue placeholder="Seç..." />
                 </SelectTrigger>

@@ -3,9 +3,7 @@ import Image from 'next/image';
 import { Clothing, CATEGORY_LABELS } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { MoreVertical, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 const COLOR_MAP: Record<string, string> = {
   siyah: '#111111', beyaz: '#f9f9f9', bej: '#f0e8d5', krem: '#fffdd0',
@@ -42,20 +40,13 @@ export function ClothingCard({ item, onDelete }: Props) {
           className="object-cover"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
         />
-        <div className="absolute top-2 right-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="h-8 w-8 shadow bg-white/90">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem className="text-red-600" onClick={() => onDelete(item.id)}>
-                <Trash2 className="h-4 w-4 mr-2" /> Sil
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <button
+          onClick={() => onDelete(item.id)}
+          className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow active:scale-90 transition-transform"
+          aria-label="Sil"
+        >
+          <Trash2 className="h-4 w-4 text-red-500" />
+        </button>
         {item.isModest && (
           <Badge className="absolute bottom-2 left-2 bg-emerald-600 text-white text-xs">Tesettür</Badge>
         )}
