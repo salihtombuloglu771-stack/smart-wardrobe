@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.smartwardrobe.app",
+    "sha256_cert_fingerprints": ["FA:FE:0B:B4:FB:50:17:5C:0A:85:2F:F5:4C:52:04:F6:D4:AE:DF:7B:7A:1F:CC:18:B0:DE:6A:4C:C9:73:3E:55"]
+  }
+}]
